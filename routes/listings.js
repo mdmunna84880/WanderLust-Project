@@ -14,7 +14,6 @@ router
 
 // * New Route
 router.get("/new",isLoggedIn, listingsController.renderNew);
-router.post("/category", wrapAsync(listingsController.filter));
 
 
 router

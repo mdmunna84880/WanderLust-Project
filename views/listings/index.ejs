@@ -1,6 +1,10 @@
 <% layout("/layouts/boilerplate") -%>
 <div id="filters">
   <div class="filter">
+    <div><i class="fa-solid fa-rainbow"></i></div>
+    <p>All</p>
+  </div>
+  <div class="filter">
     <div><i class="fa-solid fa-fire"></i></div>
     <p>Trending</p>
   </div>
@@ -73,18 +77,3 @@
     >
   <%}%>
 </div>
-
-<script>
-  let taxSwitch = document.getElementById("flexSwitchCheckDefault");
-  // console.log(taxSwitch);
-  taxSwitch.addEventListener("click", ()=>{
-    let taxInfo = document.getElementsByClassName("tax-info");
-    for(let info of taxInfo){
-      if(info.style.display != "inline"){
-        info.style.display = "inline";
-      }else{
-        info.style.display = "none";
-      }
-    }
-  })
-</script>

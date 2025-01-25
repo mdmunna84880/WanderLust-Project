@@ -1,18 +1,8 @@
 const Listing = require("../models/listing");
-let category;
-
-module.exports.filter = async(req, res, next)=>{
-     category = req.body;
-     console.log(category);
-}
+const opencage = require('opencage-api-client');
 
 module.exports.index = async (req, res, next)=>{
-    let allListing;
-    if(category){
-        allListing = await Listing.find(category);
-    }else{
-        allListing = await Listing.find();
-    }
+    let allListing = await Listing.find();
     res.render("listings/index.ejs", {allListing});
 };
 
@@ -31,12 +21,17 @@ module.exports.showListing = async (req, res, next)=>{
 }
 
 module.exports.createNewListing = async (req, res)=>{
+    let data =  await opencage.geocode({ q: req.body.listing.location });
+    let opencageCoordinate = data.results[0].geometry;
+    let defaultCordinate = { type: "Point", coordinates: [opencageCoordinate.lng, opencageCoordinate.lat]};
     let url = req.file.path;
     let filename = req.file.filename;
     let newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = {url : url, filename: filename};
-    await newListing.save();
+    newListing.geometry = defaultCordinate;
+    let savedListing = await newListing.save();
+    console.log(savedListing);
     req.flash("success", "New Listings is created!");
     res.redirect("/listings");
 }

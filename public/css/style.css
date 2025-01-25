@@ -110,3 +110,7 @@ body{
 .btns{
     display: flex;
 }
+
+#map{
+    height: 32rem;
+}
