@@ -1,6 +1,26 @@
 const Listing = require("../models/listing");
 const opencage = require('opencage-api-client');
 
+module.exports.filter = async(req, res, next)=>{
+    let category;
+    if(!category){
+       category = req.body.category;
+    }else{
+        category = "All";
+    }
+    
+    console.log(category);
+
+    let filteredListings;
+    if (category === "All") {
+        filteredListings = await Listing.find({});
+    } else {
+        filteredListings = await Listing.find({ category: category });
+    }
+
+    res.json(filteredListings);  
+}
+
 module.exports.index = async (req, res, next)=>{
     let allListing = await Listing.find();
     res.render("listings/index.ejs", {allListing});
@@ -30,8 +50,7 @@ module.exports.createNewListing = async (req, res)=>{
     newListing.owner = req.user._id;
     newListing.image = {url : url, filename: filename};
     newListing.geometry = defaultCordinate;
-    let savedListing = await newListing.save();
-    console.log(savedListing);
+    await newListing.save();
     req.flash("success", "New Listings is created!");
     res.redirect("/listings");
 }
